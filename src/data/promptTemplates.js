@@ -3,6 +3,7 @@ export const categories = [
   { id: 'design', label: 'Design', icon: '🎨', color: '#ec4899', bg: '#fdf2f8' },
   { id: 'ideas', label: 'Ideas', icon: '💡', color: '#f59e0b', bg: '#fffbeb' },
   { id: 'product', label: 'Product Docs', icon: '📋', color: '#10b981', bg: '#ecfdf5' },
+  { id: 'docmanagement', label: 'Doc Management', icon: '🗂️', color: '#0ea5e9', bg: '#f0f9ff' },
 ]
 
 export const promptConfig = {
@@ -245,6 +246,115 @@ Documentation requirements:
 - Follow documentation best practices for ${vals.docType}${sections}
 
 Produce complete, publication-ready documentation that requires minimal editing.`
+    },
+  },
+
+  docmanagement: {
+    title: 'Document Management Prompt Generator',
+    description: 'Generate prompts for organizing, processing, searching, and automating document workflows.',
+    fields: [
+      {
+        id: 'task',
+        label: 'Task Type',
+        type: 'select',
+        options: [
+          'Design a document storage & folder structure',
+          'Build a document search & retrieval system',
+          'Automate document ingestion pipeline',
+          'Create a document version control workflow',
+          'Extract & parse data from documents',
+          'Summarize & classify documents',
+          'Build a document approval / review workflow',
+          'Migrate documents between systems',
+          'Set up document access control & permissions',
+          'Archive & retention policy design',
+        ],
+      },
+      {
+        id: 'docTypes',
+        label: 'Document Types Involved',
+        type: 'select',
+        options: [
+          'PDFs & scanned files',
+          'Word / Google Docs',
+          'Spreadsheets (Excel / Sheets)',
+          'Contracts & legal documents',
+          'Invoices & financial records',
+          'Technical manuals & specs',
+          'Emails & correspondence',
+          'Forms & structured data',
+          'Mixed / various formats',
+        ],
+      },
+      {
+        id: 'scale',
+        label: 'Document Volume',
+        type: 'select',
+        options: [
+          'Small (< 1,000 documents)',
+          'Medium (1K – 100K documents)',
+          'Large (100K – 1M documents)',
+          'Enterprise (1M+ documents)',
+        ],
+      },
+      {
+        id: 'tools',
+        label: 'Tech Stack / Tools',
+        type: 'select',
+        options: [
+          'No preference (suggest best tools)',
+          'AWS S3 + Lambda',
+          'Google Cloud Storage',
+          'Azure Blob Storage',
+          'SharePoint / OneDrive',
+          'Notion / Confluence',
+          'PostgreSQL + file system',
+          'Elasticsearch',
+          'Custom / on-premise',
+        ],
+      },
+      {
+        id: 'context',
+        label: 'System / Business Context',
+        type: 'textarea',
+        placeholder: 'e.g. A legal firm that receives 500+ contracts per month via email. We need to auto-classify them by type, extract key dates and parties, and route them to the right team for review...',
+      },
+      {
+        id: 'extras',
+        label: 'Requirements to Include',
+        type: 'checkboxes',
+        options: [
+          'OCR for scanned documents',
+          'Full-text search capability',
+          'Metadata tagging & indexing',
+          'Role-based access control',
+          'Audit trail & change history',
+          'Automated expiry / retention rules',
+          'Duplicate detection',
+          'AI-powered summarization',
+          'Multi-language support',
+          'API integration endpoints',
+        ],
+      },
+    ],
+    generate: (vals) => {
+      const extras = vals.extras?.length ? `\n\nSpecific requirements:\n${vals.extras.map(e => `- ${e}`).join('\n')}` : ''
+      return `You are a senior solutions architect and document management expert with deep experience designing scalable content management systems for enterprises.
+
+Task: ${vals.task}
+
+Document types: ${vals.docTypes}
+Expected volume: ${vals.scale}
+Preferred tech stack: ${vals.tools}
+${vals.context ? `\nBusiness context:\n${vals.context}\n` : ''}
+Please provide:
+1. Recommended system architecture with rationale
+2. Folder / storage structure and naming conventions
+3. Metadata schema and indexing strategy
+4. Step-by-step implementation plan with priorities
+5. Potential pitfalls and how to avoid them${extras}
+
+Make recommendations concrete and actionable — include specific tools, schemas, or code snippets where helpful.`
     },
   },
 }
