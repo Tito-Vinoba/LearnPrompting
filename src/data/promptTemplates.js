@@ -3,7 +3,7 @@ export const categories = [
   { id: 'design', label: 'Design', icon: '🎨', color: '#ec4899', bg: '#fdf2f8' },
   { id: 'ideas', label: 'Ideas', icon: '💡', color: '#f59e0b', bg: '#fffbeb' },
   { id: 'product', label: 'Product Docs', icon: '📋', color: '#10b981', bg: '#ecfdf5' },
-  { id: 'docmanagement', label: 'Doc Management', icon: '🗂️', color: '#0ea5e9', bg: '#f0f9ff' },
+  { id: 'docmanagement', label: 'Documents', icon: '🗂️', color: '#0ea5e9', bg: '#f0f9ff' },
 ]
 
 export const promptConfig = {
@@ -250,111 +250,109 @@ Produce complete, publication-ready documentation that requires minimal editing.
   },
 
   docmanagement: {
-    title: 'Document Management Prompt Generator',
-    description: 'Generate prompts for organizing, processing, searching, and automating document workflows.',
+    title: 'Document Creator Prompt Generator',
+    description: 'Generate prompts to write, draft, edit, or structure any document — reports, notes, presentations, proposals, and more.',
     fields: [
       {
-        id: 'task',
-        label: 'Task Type',
+        id: 'docType',
+        label: 'Document Type',
         type: 'select',
         options: [
-          'Design a document storage & folder structure',
-          'Build a document search & retrieval system',
-          'Automate document ingestion pipeline',
-          'Create a document version control workflow',
-          'Extract & parse data from documents',
-          'Summarize & classify documents',
-          'Build a document approval / review workflow',
-          'Migrate documents between systems',
-          'Set up document access control & permissions',
-          'Archive & retention policy design',
+          'Word Document / Report',
+          'PowerPoint Presentation',
+          'Meeting Notes / Minutes',
+          'Project Proposal',
+          'Business Letter / Email',
+          'Executive Summary',
+          'Standard Operating Procedure (SOP)',
+          'Notebook / Research Notes',
+          'Action Plan',
+          'Invoice / Quotation',
+          'Contract / Agreement',
+          'Case Study',
         ],
       },
       {
-        id: 'docTypes',
-        label: 'Document Types Involved',
+        id: 'action',
+        label: 'What do you want to do?',
         type: 'select',
         options: [
-          'PDFs & scanned files',
-          'Word / Google Docs',
-          'Spreadsheets (Excel / Sheets)',
-          'Contracts & legal documents',
-          'Invoices & financial records',
-          'Technical manuals & specs',
-          'Emails & correspondence',
-          'Forms & structured data',
-          'Mixed / various formats',
+          'Write from scratch',
+          'Rewrite & improve an existing draft',
+          'Summarize into a shorter version',
+          'Expand with more detail',
+          'Convert to a different format',
+          'Proofread & fix grammar/tone',
+          'Create an outline / structure',
+          'Translate to another language',
         ],
       },
       {
-        id: 'scale',
-        label: 'Document Volume',
+        id: 'audience',
+        label: 'Target Audience',
         type: 'select',
         options: [
-          'Small (< 1,000 documents)',
-          'Medium (1K – 100K documents)',
-          'Large (100K – 1M documents)',
-          'Enterprise (1M+ documents)',
+          'Internal team / colleagues',
+          'Senior management / executives',
+          'External clients / customers',
+          'Investors / stakeholders',
+          'General public',
+          'Students / learners',
+          'Technical experts',
         ],
       },
       {
-        id: 'tools',
-        label: 'Tech Stack / Tools',
+        id: 'tone',
+        label: 'Tone & Style',
         type: 'select',
         options: [
-          'No preference (suggest best tools)',
-          'AWS S3 + Lambda',
-          'Google Cloud Storage',
-          'Azure Blob Storage',
-          'SharePoint / OneDrive',
-          'Notion / Confluence',
-          'PostgreSQL + file system',
-          'Elasticsearch',
-          'Custom / on-premise',
+          'Professional & formal',
+          'Friendly & conversational',
+          'Persuasive & compelling',
+          'Concise & direct',
+          'Detailed & thorough',
+          'Inspirational & motivating',
+          'Neutral & objective',
         ],
       },
       {
         id: 'context',
-        label: 'System / Business Context',
+        label: 'Topic / Content Description',
         type: 'textarea',
-        placeholder: 'e.g. A legal firm that receives 500+ contracts per month via email. We need to auto-classify them by type, extract key dates and parties, and route them to the right team for review...',
+        placeholder: 'e.g. A quarterly business review presentation for Q1 2025. Covers sales performance, team highlights, key challenges, and goals for Q2. Audience is the executive leadership team...',
       },
       {
         id: 'extras',
-        label: 'Requirements to Include',
+        label: 'Include in Document',
         type: 'checkboxes',
         options: [
-          'OCR for scanned documents',
-          'Full-text search capability',
-          'Metadata tagging & indexing',
-          'Role-based access control',
-          'Audit trail & change history',
-          'Automated expiry / retention rules',
-          'Duplicate detection',
-          'AI-powered summarization',
-          'Multi-language support',
-          'API integration endpoints',
+          'Table of contents',
+          'Executive summary / intro',
+          'Charts / data visualization suggestions',
+          'Key bullet points per section',
+          'Action items / next steps',
+          'Headers and subheadings',
+          'Conclusion & recommendations',
+          'Appendix / supporting details',
         ],
       },
     ],
     generate: (vals) => {
-      const extras = vals.extras?.length ? `\n\nSpecific requirements:\n${vals.extras.map(e => `- ${e}`).join('\n')}` : ''
-      return `You are a senior solutions architect and document management expert with deep experience designing scalable content management systems for enterprises.
+      const extras = vals.extras?.length ? `\n\nThe document must include:\n${vals.extras.map(e => `- ${e}`).join('\n')}` : ''
+      return `You are a professional document writer and editor with expertise in business communication and content creation.
 
-Task: ${vals.task}
+Task: ${vals.action} a ${vals.docType}
 
-Document types: ${vals.docTypes}
-Expected volume: ${vals.scale}
-Preferred tech stack: ${vals.tools}
-${vals.context ? `\nBusiness context:\n${vals.context}\n` : ''}
-Please provide:
-1. Recommended system architecture with rationale
-2. Folder / storage structure and naming conventions
-3. Metadata schema and indexing strategy
-4. Step-by-step implementation plan with priorities
-5. Potential pitfalls and how to avoid them${extras}
+Audience: ${vals.audience}
+Tone & style: ${vals.tone}
+${vals.context ? `\nTopic / content:\n${vals.context}\n` : ''}
+Requirements:
+- Tailor the language and depth to the audience (${vals.audience})
+- Match the tone throughout: ${vals.tone}
+- Use clear structure with logical flow
+- Make it ready to use with minimal editing${extras}
 
-Make recommendations concrete and actionable — include specific tools, schemas, or code snippets where helpful.`
+Produce the complete document content. Use proper headings, formatting, and paragraph structure appropriate for a ${vals.docType}.`
     },
   },
 }
